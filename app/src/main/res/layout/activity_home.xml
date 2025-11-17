@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F9B4AE"
+    tools:context=".HomeActivity">
+
+    <!-- 🔹 Header (Home + Heart icons) -->
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:layout_alignParentTop="true">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/ic_menu_view"
+            android:contentDescription="Home icon"
+            app:tint="@android:color/black" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Home"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="@android:color/black" />
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/btn_star_big_off"
+            android:contentDescription="Favorites icon"
+            app:tint="@android:color/black" />
+    </LinearLayout>
+
+    <!-- 🔹 Conținut principal -->
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_centerInParent="true"
+        android:paddingHorizontal="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="What's in your kitchen?"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="20dp" />
+
+        <!-- 🔸 Search / Select ingredients bar -->
+        <AutoCompleteTextView
+            android:id="@+id/ingredientInput"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Select or search ingredients"
+            android:background="@android:color/white"
+            android:padding="10dp"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            android:layout_marginBottom="10dp" />
+
+        <!-- 🔸 Zona unde apar tag-urile selectate -->
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/selectedContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="8dp"
+            app:flexWrap="wrap"
+            app:justifyContent="flex_start"
+            app:alignItems="flex_start" />
+    </LinearLayout>
+
+    <!-- 🔹 Butonul jos -->
+    <Button
+        android:id="@+id/findRecipeButton"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:text="Find Recipe"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:background="@drawable/rounded_button"
+        android:layout_margin="60dp"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>
