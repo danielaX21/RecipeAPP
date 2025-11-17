@@ -25,6 +25,6 @@
         <!-- Pagina secundară (Recipes) -->
         <activity android:name=".RecipesActivity" />
         <activity android:name=".RecipeDetailsActivity" />
-
+        <activity android:name=".FavoritesActivity" />
     </application>
 </manifest>

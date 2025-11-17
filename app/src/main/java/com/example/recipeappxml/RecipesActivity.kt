@@ -1,6 +1,8 @@
 package com.example.recipeappxml
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,7 +23,18 @@ class RecipesActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recipesRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // 🔹 Preluăm ingredientele selectate și curățăm spațiile
+        val homeButton = findViewById<ImageView>(R.id.homeButton)
+        val favButton = findViewById<ImageView>(R.id.favButton)
+
+        homeButton.setOnClickListener {
+            finish() // te întorci la Home
+        }
+
+        favButton.setOnClickListener {
+            val intent = Intent(this, FavoritesActivity::class.java)
+            startActivity(intent)
+        }
+
         val selectedIngredients =
             intent.getStringExtra("ingredient")
                 ?.split(",")
@@ -29,12 +42,6 @@ class RecipesActivity : AppCompatActivity() {
                 ?.filter { it.isNotEmpty() }
                 ?: emptyList()
 
-        adapter = RecipeAdapter(this, allRecipes) { recipe ->
-            Toast.makeText(this, "Selected: ${recipe.title}", Toast.LENGTH_SHORT).show()
-        }
-        recyclerView.adapter = adapter
-
-        // dacă nu s-a selectat nimic, nu încărcăm nimic
         if (selectedIngredients.isEmpty()) {
             Toast.makeText(this, "No ingredients selected.", Toast.LENGTH_SHORT).show()
             return
@@ -47,30 +54,27 @@ class RecipesActivity : AppCompatActivity() {
         try {
             val inputStream = assets.open("recipes.csv")
             val reader = CSVReaderBuilder(InputStreamReader(inputStream))
-                .withSkipLines(1) // sărim headerul
+                .withSkipLines(1)
                 .build()
 
             val filteredList = mutableListOf<Recipe>()
             var line: Array<String>?
 
             while (reader.readNext().also { line = it } != null) {
-                if (line == null || line!!.size < 9) continue // trebuie să aibă și coloana directions
+                if (line == null || line!!.size < 9) continue
 
                 val title = line!![1].trim()
-                val time = line!![2].ifEmpty { "N/A" }
                 val ingredientsRaw = line!![7].lowercase()
-                val directions = line!![8].trim()
+                val directions = line!!.getOrNull(8)?.trim() ?: "No directions available."
+                val time = line!![2].ifEmpty { "N/A" }
                 val imageUrl = line!!.getOrNull(14) ?: ""
-                val difficulty = "Medium"
 
-                // despărțim ingredientele după virgulă
                 val recipeIngredients = ingredientsRaw
                     .replace("[\\[\\]\"]".toRegex(), "")
                     .split(",")
                     .map { it.trim().lowercase() }
                     .filter { it.isNotEmpty() }
 
-                // dacă toate ingredientele selectate sunt în listă
                 val matchesAll = selectedIngredients.all { sel ->
                     recipeIngredients.any { it.contains(sel, ignoreCase = true) }
                 }
@@ -81,7 +85,7 @@ class RecipesActivity : AppCompatActivity() {
                             title = title,
                             ingredients = recipeIngredients,
                             time = time,
-                            difficulty = difficulty,
+                            difficulty = "Medium",
                             imageUrl = imageUrl,
                             directions = directions
                         )
@@ -94,16 +98,11 @@ class RecipesActivity : AppCompatActivity() {
 
             allRecipes.clear()
             allRecipes.addAll(filteredList)
+            adapter = RecipeAdapter(allRecipes)
+            recyclerView.adapter = adapter
 
-            runOnUiThread {
-                adapter.notifyDataSetChanged()
-                if (filteredList.isEmpty()) {
-                    Toast.makeText(
-                        this,
-                        "No recipes found for your ingredients!",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
+            if (filteredList.isEmpty()) {
+                Toast.makeText(this, "No recipes found for your ingredients!", Toast.LENGTH_LONG).show()
             }
 
         } catch (e: Exception) {
@@ -111,5 +110,4 @@ class RecipesActivity : AppCompatActivity() {
             Toast.makeText(this, "Error reading CSV: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
-
 }

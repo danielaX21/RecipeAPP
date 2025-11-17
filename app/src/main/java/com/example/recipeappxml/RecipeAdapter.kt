@@ -1,6 +1,5 @@
 package com.example.recipeappxml
 
-import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -12,9 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 
 class RecipeAdapter(
-    private val context: Context,
-    private val recipes: List<Recipe>,
-    private val onClick: (Recipe) -> Unit
+    private val recipes: List<Recipe>
 ) : RecyclerView.Adapter<RecipeAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -26,7 +23,8 @@ class RecipeAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_recipe, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_recipe, parent, false)
         return ViewHolder(view)
     }
 
@@ -37,7 +35,7 @@ class RecipeAdapter(
         holder.time.text = recipe.time
         holder.difficulty.text = recipe.difficulty
 
-        // 📸 Încarcă imaginea dacă există
+        // imaginea din rețetă
         if (recipe.imageUrl.isNotEmpty()) {
             Picasso.get()
                 .load(recipe.imageUrl)
@@ -45,8 +43,9 @@ class RecipeAdapter(
                 .into(holder.image)
         }
 
-        // 🔸 Când apeși pe „View Details”, deschide pagina detaliilor
+        // când apeși View Details → deschide RecipeDetailsActivity
         holder.button.setOnClickListener {
+            val context = holder.itemView.context
             val intent = Intent(context, RecipeDetailsActivity::class.java)
             intent.putExtra("title", recipe.title)
             intent.putExtra("ingredients", recipe.ingredients.joinToString("\n• "))

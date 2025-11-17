@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F9B4AE"
-    android:padding="16dp">
+    android:padding="16dp"
+    tools:context=".RecipeDetailsActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,76 +14,122 @@
         android:orientation="vertical"
         android:gravity="center_horizontal">
 
+        <!-- 🔹 HEADER (Back + Title + Favorite) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:id="@+id/backButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@android:drawable/ic_media_previous"
+                android:contentDescription="Back"
+                app:tint="@android:color/black" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Details"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/favButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@android:drawable/btn_star_big_off"
+                android:contentDescription="Favorite"
+                app:tint="@android:color/black" />
+        </LinearLayout>
+
+        <!-- 🔹 Imagine rețetă -->
         <ImageView
-            android:id="@+id/recipeImage"
+            android:id="@+id/recipeDetailImage"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:scaleType="centerCrop"
             android:background="@android:color/darker_gray"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="8dp" />
 
+        <!-- 🔹 Titlu rețetă -->
         <TextView
-            android:id="@+id/recipeTitle"
+            android:id="@+id/recipeDetailTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Omelette with tomatoes"
-            android:textSize="20sp"
+            android:text="Recipe Title"
             android:textStyle="bold"
             android:textColor="@android:color/black"
-            android:layout_marginBottom="10dp" />
+            android:textSize="18sp"
+            android:layout_marginBottom="12dp" />
 
+        <!-- 🔹 Card Ingredients + Steps -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#F7A9A0"
-            android:padding="12dp"
             android:orientation="vertical"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="10dp"
+            android:background="#F7A8A1"
+            android:padding="16dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginTop="4dp"
+            android:elevation="3dp"
             android:clipToOutline="true"
-            android:elevation="4dp"
-            android:backgroundTint="#F7A9A0">
+            android:backgroundTint="@android:color/white">
 
+            <!-- Titlu Ingredients -->
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Ingredients"
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:layout_marginBottom="4dp" />
 
+            <!-- Lista Ingredients -->
             <TextView
-                android:id="@+id/recipeIngredients"
+                android:id="@+id/recipeDetailIngredients"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="- Eggs\n- Tomatoes\n- Olive oil"
+                android:text="• Eggs\n• Tomatoes\n• Cheese"
                 android:textColor="@android:color/black"
                 android:textSize="14sp"
-                android:layout_marginBottom="10dp" />
+                android:layout_marginBottom="12dp" />
 
+            <!-- Titlu Steps -->
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Steps"
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:layout_marginBottom="4dp" />
 
+            <!-- Descriere Steps -->
             <TextView
-                android:id="@+id/recipeDirections"
+                android:id="@+id/recipeDetailDirections"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="1. Dice the tomatoes.\n2. Beat eggs in a bowl..."
+                android:text="1. Dice tomatoes.\n2. Beat eggs.\n3. Cook on low heat."
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
         </LinearLayout>
 
+        <!-- 🔹 Buton Favorite -->
         <Button
             android:id="@+id/addToFavoritesButton"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="55dp"
             android:text="Add to favorites"
-            android:textColor="@android:color/white"
             android:textStyle="bold"
+            android:textColor="@android:color/white"
             android:background="@drawable/rounded_button" />
-
     </LinearLayout>
 </ScrollView>
