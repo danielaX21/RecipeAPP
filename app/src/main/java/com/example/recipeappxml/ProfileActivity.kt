@@ -87,7 +87,12 @@ class ProfileActivity : AppCompatActivity() {
             startActivity(Intent(this, FavoritesActivity::class.java))
         }
         btnLogout.setOnClickListener {
-            sharedPref.edit().clear().apply()
+            val sharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+
+            // NU mai folosim clear(). Ștergem doar sesiunea numelui dacă vrei,
+            // dar cel mai sigur este doar să navigăm spre Login.
+            // sharedPref.edit().remove("userName").apply() // Opțional
+
             startActivity(Intent(this, LoginActivity::class.java))
             finishAffinity()
         }
@@ -130,29 +135,32 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    // 2. Salvarea pozei folosind numele utilizatorului în cheie
     private fun processAndSaveImage(bitmap: Bitmap) {
-        // Avatar mic => evită OOM + merge ok în SharedPreferences
         val scaledBitmap = Bitmap.createScaledBitmap(bitmap, 250, 250, true)
-
-        // UI
         profileImage.setImageBitmap(scaledBitmap)
         profileImage.setPadding(0, 0, 0, 0)
         profileImage.scaleType = ImageView.ScaleType.CENTER_CROP
 
-        // Save ca Base64
         val baos = ByteArrayOutputStream()
         scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos)
         val encodedImage = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT)
 
-        getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-            .edit()
-            .putString("profileImage", encodedImage)
+        val sharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        // Preluăm numele utilizatorului curent logat
+        val currentUserName = sharedPref.getString("userName", "Chef")
+
+        sharedPref.edit()
+            .putString("profileImage_$currentUserName", encodedImage) // Cheie unică: profileImage_NumeUtilizator
             .apply()
     }
 
     private fun loadSavedImage() {
         val sharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val encodedImage = sharedPref.getString("profileImage", null) ?: return
+        val currentUserName = sharedPref.getString("userName", "Chef")
+
+        // Încărcăm poza salvată specific pentru acest utilizator
+        val encodedImage = sharedPref.getString("profileImage_$currentUserName", null) ?: return
 
         val imageBytes = Base64.decode(encodedImage, Base64.DEFAULT)
         val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)

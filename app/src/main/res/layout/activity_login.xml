@@ -15,6 +15,7 @@
         android:layout_marginBottom="20dp"
         android:tint="@color/deep_rose" />
 
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,6 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:hint="Enter your name"
+        android:textColor="@color/deep_rose"
         android:background="@drawable/input_background"
         android:padding="15dp"
         android:layout_marginBottom="15dp" />

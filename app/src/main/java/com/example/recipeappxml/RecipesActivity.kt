@@ -54,10 +54,30 @@ class RecipesActivity : AppCompatActivity(), SensorEventListener {
         }
 
         findViewById<TextView>(R.id.filterTime).setOnClickListener {
-            // Extragem doar numerele din string-ul de timp (ex: "25 min" -> 25)
-            shownRecipes.sortBy { it.total_time.filter { char -> char.isDigit() }.toIntOrNull() ?: 999 }
+            shownRecipes.sortBy { recipe ->
+                val timeStr = recipe.total_time.lowercase()
+                var totalMinutes = 0
+
+                // 1. Căutăm orele (h sau hr sau hrs)
+                if (timeStr.contains("h")) {
+                    // Extragem numărul care stă înaintea lui "h"
+                    val hourPart = timeStr.substringBefore("h").trim().filter { it.isDigit() }
+                    totalMinutes += (hourPart.toIntOrNull() ?: 0) * 60
+                }
+
+                // 2. Căutăm minutele (m sau min sau mins)
+                if (timeStr.contains("m")) {
+                    // Dacă avem ore, luăm partea de după "h", altfel luăm tot textul
+                    val afterHour = if (timeStr.contains("h")) timeStr.substringAfter("h") else timeStr
+                    val minutePart = afterHour.substringBefore("m").trim().filter { it.isDigit() }
+                    totalMinutes += (minutePart.toIntOrNull() ?: 0)
+                }
+
+                // Dacă nu a găsit nici cifre, nici h/m, punem o valoare mare la final
+                if (totalMinutes == 0) 9999 else totalMinutes
+            }
             adapter.notifyDataSetChanged()
-            Toast.makeText(this, "Sorted by Time", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Sorted by Time (Fastest first)", Toast.LENGTH_SHORT).show()
         }
         // Setup Senzor
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
