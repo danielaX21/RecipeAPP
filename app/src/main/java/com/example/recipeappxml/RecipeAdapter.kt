@@ -32,8 +32,8 @@ class RecipeAdapter(
         val recipe = recipes[position]
 
         holder.title.text = recipe.title
-        holder.time.text = recipe.time
-        holder.difficulty.text = recipe.difficulty
+        holder.time.text = recipe.total_time
+        //holder.difficulty.text = recipe.difficulty
 
         // imaginea din rețetă
         if (recipe.imageUrl.isNotEmpty()) {
@@ -48,7 +48,8 @@ class RecipeAdapter(
             val context = holder.itemView.context
             val intent = Intent(context, RecipeDetailsActivity::class.java)
             intent.putExtra("title", recipe.title)
-            intent.putExtra("ingredients", recipe.ingredients.joinToString("\n• "))
+            val ingredientsText = recipe.ingredientsAsList().joinToString("\n• ", prefix = "• ")
+            intent.putExtra("ingredients", ingredientsText)
             intent.putExtra("directions", recipe.directions ?: "No directions available.")
             intent.putExtra("imageUrl", recipe.imageUrl)
             context.startActivity(intent)

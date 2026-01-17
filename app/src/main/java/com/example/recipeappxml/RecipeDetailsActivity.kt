@@ -1,5 +1,6 @@
 package com.example.recipeappxml
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
@@ -14,24 +15,14 @@ class RecipeDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe_details)
 
+        // Initializare View-uri
         val imageView: ImageView = findViewById(R.id.recipeDetailImage)
         val titleView: TextView = findViewById(R.id.recipeDetailTitle)
         val ingredientsView: TextView = findViewById(R.id.recipeDetailIngredients)
         val directionsView: TextView = findViewById(R.id.recipeDetailDirections)
         val backButton: ImageView = findViewById(R.id.backButton)
         val favButton: ImageView = findViewById(R.id.favButton)
-        val addButton = findViewById<Button>(R.id.addToFavoritesButton)
-        addButton.setOnClickListener {
-            val title = intent.getStringExtra("title") ?: return@setOnClickListener
-            val ingredients = intent.getStringExtra("ingredients")?.split("\n• ") ?: emptyList()
-            val directions = intent.getStringExtra("directions") ?: ""
-            val imageUrl = intent.getStringExtra("imageUrl") ?: ""
-
-            val recipe = Recipe(title, ingredients, "N/A", "Medium", imageUrl, directions)
-            RecipeFavoritesManager.addFavorite(recipe)
-            Toast.makeText(this, "$title added to favorites!", Toast.LENGTH_SHORT).show()
-        }
-
+        val addButton: Button = findViewById(R.id.addToFavoritesButton)
 
         // Preluăm datele din Intent
         val title = intent.getStringExtra("title") ?: "No title"
@@ -51,16 +42,35 @@ class RecipeDetailsActivity : AppCompatActivity() {
                 .into(imageView)
         }
 
-        // Butonul de întoarcere
+        // 1. Butonul din stânga sus (Logo/Back) -> acum duce la Home
         backButton.setOnClickListener {
+            val intentHome = Intent(this, HomeActivity::class.java)
+            // FLAG_ACTIVITY_CLEAR_TOP șterge istoricul de ecrane pentru a nu se întoarce în buclă
+            intentHome.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intentHome)
             finish()
         }
 
-        // Favorite
+        // 2. Butonul din dreapta sus (Steluța din bară) -> duce la pagina de Favorite
         favButton.setOnClickListener {
-            Toast.makeText(this, "Added to favorites ❤️", Toast.LENGTH_SHORT).show()
+            val intentFav = Intent(this, FavoritesActivity::class.java)
+            startActivity(intentFav)
         }
 
+        // 3. Butonul mare de jos -> Salvează rețeta în lista de favorite
+        addButton.setOnClickListener {
+            val currentRecipe = Recipe(
+                title = title,
+                ingredients = ingredients,
+                total_time = "N/A",
+                rating = 0.0,
+                imageUrl = imageUrl,
+                directions = directions
+            )
 
+            // Apelăm managerul care salvează și pe disc (SharedPreferences)
+            RecipeFavoritesManager.addFavorite(this, currentRecipe)
+            Toast.makeText(this, "Adăugat la favorite! ❤️", Toast.LENGTH_SHORT).show()
+        }
     }
 }

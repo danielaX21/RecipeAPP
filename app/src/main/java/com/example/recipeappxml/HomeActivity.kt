@@ -15,12 +15,17 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-
+        // Încarcă favoritele salvate anterior
+        RecipeFavoritesManager.loadFromDisk(this)
         ingredientInput = findViewById(R.id.ingredientInput)
         selectedContainer = findViewById(R.id.selectedContainer)
         val findButton = findViewById<Button>(R.id.findRecipeButton)
-        val favButton = findViewById<ImageView>(R.id.favButton) // ⭐ butonul din bara de sus
-
+        //val favButton = findViewById<ImageView>(R.id.favButton) // ⭐ butonul din bara de sus
+        val favButton = findViewById<ImageView>(R.id.favButton)
+        favButton.setOnClickListener {
+            val intent = Intent(this, FavoritesActivity::class.java)
+            startActivity(intent)
+        }
         val ingredients = listOf(
             "Eggs", "Tomatoes", "Potatoes", "Onion", "Garlic",
             "Cheese", "Milk", "Butter", "Olive oil", "Flour",
@@ -49,11 +54,13 @@ class HomeActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val selectedText = selectedIngredients.joinToString(",")
             val intent = Intent(this, RecipesActivity::class.java)
-            intent.putExtra("ingredient", selectedText)
+            intent.putExtra("ingredients", selectedIngredients.joinToString(","))
             startActivity(intent)
+
         }
+
+
 
         // ⭐ deschide pagina de favorite
         favButton.setOnClickListener {
