@@ -8,6 +8,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.squareup.picasso.Picasso
+import android.content.res.ColorStateList
 
 class RecipeDetailsActivity : AppCompatActivity() {
 
@@ -30,6 +31,10 @@ class RecipeDetailsActivity : AppCompatActivity() {
         val directions = intent.getStringExtra("directions") ?: "No directions"
         val imageUrl = intent.getStringExtra("imageUrl") ?: ""
 
+        // IMPORTANT: Preluăm rating și timp din intent pentru a nu fi 0.0/NA
+        val rating = intent.getDoubleExtra("rating", 0.0)
+        val totalTime = intent.getStringExtra("total_time") ?: "N/A"
+
         // Setăm valorile în UI
         titleView.text = title
         ingredientsView.text = ingredients
@@ -42,35 +47,57 @@ class RecipeDetailsActivity : AppCompatActivity() {
                 .into(imageView)
         }
 
-        // 1. Butonul din stânga sus (Logo/Back) -> acum duce la Home
+        // Navigare înapoi la Home
         backButton.setOnClickListener {
             val intentHome = Intent(this, HomeActivity::class.java)
-            // FLAG_ACTIVITY_CLEAR_TOP șterge istoricul de ecrane pentru a nu se întoarce în buclă
             intentHome.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intentHome)
             finish()
         }
 
-        // 2. Butonul din dreapta sus (Steluța din bară) -> duce la pagina de Favorite
+        // Navigare la pagina de Favorite
         favButton.setOnClickListener {
             val intentFav = Intent(this, FavoritesActivity::class.java)
             startActivity(intentFav)
         }
 
-        // 3. Butonul mare de jos -> Salvează rețeta în lista de favorite
-        addButton.setOnClickListener {
-            val currentRecipe = Recipe(
-                title = title,
-                ingredients = ingredients,
-                total_time = "N/A",
-                rating = 0.0,
-                imageUrl = imageUrl,
-                directions = directions
-            )
+        // Creăm obiectul rețetă COMPLET (cu rating și timp)
+        val currentRecipe = Recipe(
+            title = title,
+            ingredients = ingredients,
+            total_time = totalTime,
+            rating = rating,
+            imageUrl = imageUrl,
+            directions = directions
+        )
 
-            // Apelăm managerul care salvează și pe disc (SharedPreferences)
-            RecipeFavoritesManager.addFavorite(this, currentRecipe)
-            Toast.makeText(this, "Adăugat la favorite! ❤️", Toast.LENGTH_SHORT).show()
+        // Verificăm dacă este deja la favorite
+        var isFavorite = RecipeFavoritesManager.getFavorites().any { it.title == title }
+
+        // Setăm aspectul inițial al butonului
+        if (isFavorite) {
+            addButton.text = "Remove from Favorites"
+            addButton.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.soft_pink))
+        } else {
+            addButton.text = "Add to Favorites"
+            addButton.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.deep_rose))
+        }
+
+        // Logica de Add/Remove (o singură dată!)
+        addButton.setOnClickListener {
+            if (RecipeFavoritesManager.getFavorites().any { it.title == title }) {
+                // Dacă există deja, îl ștergem
+                RecipeFavoritesManager.removeFavorite(this, currentRecipe)
+                Toast.makeText(this, "Removed from Favorites", Toast.LENGTH_SHORT).show()
+                addButton.text = "Add to Favorites"
+                addButton.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.deep_rose))
+            } else {
+                // Dacă nu există, îl adăugăm
+                RecipeFavoritesManager.addFavorite(this, currentRecipe)
+                Toast.makeText(this, "Added to Favorites", Toast.LENGTH_SHORT).show()
+                addButton.text = "Remove from Favorites"
+                addButton.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.soft_pink))
+            }
         }
     }
 }

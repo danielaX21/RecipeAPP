@@ -7,7 +7,8 @@ data class Recipe(
     var rating: Double = 0.0,
     var imageUrl: String = "",
     var directions: String = "",
-    var url: String = ""
+    var url: String = "",
+    var difficulty: String = "" // Adaugă această linie dacă lipsește
 ) {
     fun ingredientsAsList(): List<String> {
         // dacă e listă în DB

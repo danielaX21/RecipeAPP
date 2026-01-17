@@ -1,72 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="#FCD2CF"
-    android:padding="12dp"
-    android:layout_margin="8dp"
-    android:elevation="2dp"
-    android:clipToOutline="true"
-    android:backgroundTint="#FCD2CF"
-    android:layout_gravity="center_horizontal">
+    android:layout_margin="10dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="5dp"
+    app:cardBackgroundColor="@android:color/white">
 
-    <!-- Imagine rețetă -->
-    <ImageView
-        android:id="@+id/recipeImage"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:scaleType="centerCrop"
-        android:background="@android:color/darker_gray"
-        android:layout_marginBottom="8dp" />
-
-    <!-- Titlu -->
-    <TextView
-        android:id="@+id/recipeTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Recipe title"
-        android:textColor="@android:color/black"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:layout_marginBottom="6dp" />
-
-    <!-- Linie: timp + dificultate -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="8dp">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/recipeTime"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="15 min"
-            android:textColor="@android:color/black"
-            android:drawableLeft="@android:drawable/ic_popup_sync"
-            android:drawablePadding="6dp" />
+        <ImageView
+            android:id="@+id/recipeImage"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:scaleType="centerCrop" />
 
-        <TextView
-            android:id="@+id/recipeDifficulty"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Easy"
-            android:textColor="@android:color/black" />
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/recipeTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recipe Title"
+                android:textColor="@color/deep_rose"
+                android:textStyle="bold"
+                android:fontFamily="serif"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:id="@+id/recipeTime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="15 min"
+                    android:textColor="@color/soft_pink"
+                    android:textStyle="bold"
+                    android:drawableStart="@android:drawable/ic_menu_today"
+                    app:drawableTint="@color/soft_pink"
+                    android:drawablePadding="6dp" />
+
+                <TextView
+                    android:id="@+id/recipeDifficulty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Easy"
+                    android:textStyle="italic"
+                    android:textColor="@color/deep_rose" />
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/viewDetailsButton"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="View Details"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:background="@drawable/button_pink_rounded"
+                app:backgroundTint="@color/deep_rose" />
+        </LinearLayout>
     </LinearLayout>
-
-
-    <!-- Buton Detalii -->
-    <Button
-        android:id="@+id/viewDetailsButton"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:text="View Details"
-        android:background="@drawable/rounded_button"
-        android:textColor="@android:color/white"
-        android:textStyle="bold"
-        android:layout_marginTop="4dp" />
-
-</LinearLayout>
+</androidx.cardview.widget.CardView>

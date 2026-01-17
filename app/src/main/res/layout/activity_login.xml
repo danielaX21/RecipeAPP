@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/cream_white"
+    android:gravity="center"
+    android:padding="30dp">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_home"
+        android:contentDescription="Logo"
+        android:layout_marginBottom="20dp"
+        android:tint="@color/deep_rose" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome Chef!"
+        android:textSize="28sp"
+        android:fontFamily="serif"
+        android:textStyle="bold"
+        android:textColor="@color/deep_rose"
+        android:layout_marginBottom="30dp" />
+
+    <EditText
+        android:id="@+id/etUsername"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:hint="Enter your name"
+        android:background="@drawable/input_background"
+        android:padding="15dp"
+        android:layout_marginBottom="15dp" />
+
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:text="Start Cooking"
+        android:backgroundTint="@color/deep_rose"
+        android:textColor="@android:color/white"
+        android:textAllCaps="false"
+        android:textSize="18sp" />
+</LinearLayout>

@@ -1,5 +1,6 @@
 package com.example.recipeappxml
 
+import android.widget.ImageView
 import android.content.Context
 import android.content.Intent
 import android.hardware.Sensor
@@ -13,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
 import kotlin.math.sqrt
+import android.widget.TextView
+import android.view.View
 
 class RecipesActivity : AppCompatActivity(), SensorEventListener {
 
@@ -30,6 +33,32 @@ class RecipesActivity : AppCompatActivity(), SensorEventListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipes)
 
+        // 1. Butonul Home (iconița din stânga sus)
+        val backBtn = findViewById<ImageView>(R.id.backBtn)
+        backBtn.setOnClickListener {
+            // Închide activitatea curentă și te trimite automat la Home
+            finish()
+        }
+
+        // 2. Butonul Favorites (iconița steluță din dreapta sus)
+        val favIcon = findViewById<ImageView>(R.id.favIconHeader)
+        favIcon.setOnClickListener {
+            val intent = Intent(this, FavoritesActivity::class.java)
+            startActivity(intent) // Deschide pagina de favorite
+        }
+
+        findViewById<TextView>(R.id.filterRating).setOnClickListener {
+            shownRecipes.sortByDescending { it.rating }
+            adapter.notifyDataSetChanged()
+            Toast.makeText(this, "Sorted by Rating", Toast.LENGTH_SHORT).show()
+        }
+
+        findViewById<TextView>(R.id.filterTime).setOnClickListener {
+            // Extragem doar numerele din string-ul de timp (ex: "25 min" -> 25)
+            shownRecipes.sortBy { it.total_time.filter { char -> char.isDigit() }.toIntOrNull() ?: 999 }
+            adapter.notifyDataSetChanged()
+            Toast.makeText(this, "Sorted by Time", Toast.LENGTH_SHORT).show()
+        }
         // Setup Senzor
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL)
@@ -54,9 +83,16 @@ class RecipesActivity : AppCompatActivity(), SensorEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val results = mutableListOf<Recipe>()
                 for (recipeSnap in snapshot.children) {
+                    // Citim exact cheile din baza ta de date
                     val title = recipeSnap.child("title").getValue(String::class.java) ?: ""
+                    val ratingValue = recipeSnap.child("rating").getValue(Double::class.java) ?: 0.0
+                    val timeValue = recipeSnap.child("total_time").getValue(String::class.java) ?: "N/A"
+                    val imageUrl = recipeSnap.child("imageUrl").getValue(String::class.java) ?: ""
+                    val directions = recipeSnap.child("directions").getValue(String::class.java) ?: ""
+
                     val ingredientsList = readIngredientsAsList(recipeSnap.child("ingredients"))
 
+                    // Verificăm dacă ingredientele se potrivesc
                     val matchesAll = selectedIngredients.all { sel ->
                         ingredientsList.any { it.contains(sel, ignoreCase = true) }
                     }
@@ -65,14 +101,23 @@ class RecipesActivity : AppCompatActivity(), SensorEventListener {
                         results.add(Recipe(
                             title = title,
                             ingredients = ingredientsList,
-                            total_time = recipeSnap.child("total_time").getValue(String::class.java) ?: "",
-                            imageUrl = recipeSnap.child("imageUrl").getValue(String::class.java) ?: "",
-                            directions = recipeSnap.child("directions").getValue(String::class.java) ?: ""
+                            total_time = timeValue, // Acum va lua valoarea reală
+                            rating = ratingValue,    // Acum va lua valoarea reală
+                            imageUrl = imageUrl,
+                            directions = directions
                         ))
                     }
                 }
                 shownRecipes.clear()
                 shownRecipes.addAll(results)
+                val noResultsText = findViewById<TextView>(R.id.noResultsText)
+                if (results.isEmpty()) {
+                    noResultsText.visibility = View.VISIBLE
+                    recyclerView.visibility = View.GONE
+                } else {
+                    noResultsText.visibility = View.GONE
+                    recyclerView.visibility = View.VISIBLE
+                }
                 adapter.notifyDataSetChanged()
             }
             override fun onCancelled(error: DatabaseError) {}

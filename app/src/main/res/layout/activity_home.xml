@@ -4,47 +4,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F9B4AE"
+    android:background="@color/cream_white"
     tools:context=".HomeActivity">
 
-    <!-- 🔹 Bara de sus -->
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:padding="16dp"
+        android:background="@drawable/header_background"
+        android:elevation="4dp"
         android:layout_alignParentTop="true">
 
         <ImageView
-            android:id="@+id/homeIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@android:drawable/ic_menu_view"
-            android:contentDescription="Home icon"
-            app:tint="@android:color/black" />
+            android:id="@+id/profileIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_profile_user"
+            android:contentDescription="Profile icon"
+            app:tint="@color/deep_rose"
+            android:padding="2dp"
+            android:layout_gravity="center_vertical" />
 
         <TextView
+            android:id="@+id/homeTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Home"
-            android:textSize="18sp"
+            android:text="My Kitchen"
+            android:textSize="22sp"
+            android:fontFamily="serif"
             android:textStyle="bold"
             android:gravity="center"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/deep_rose" />
 
         <ImageView
             android:id="@+id/favButton"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@android:drawable/btn_star_big_off"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@android:drawable/btn_star_big_on"
             android:contentDescription="Favorites icon"
-            app:tint="@android:color/black" />
+            app:tint="@color/deep_rose" />
     </LinearLayout>
 
-    <!-- 🔹 Conținut principal -->
     <LinearLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
@@ -55,49 +59,52 @@
         android:paddingHorizontal="24dp">
 
         <TextView
+            android:id="@+id/welcomeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="What's in your kitchen?"
-            android:textSize="17sp"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="20dp" />
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/deep_rose"
+            android:layout_marginBottom="25dp" />
 
-        <!-- 🔸 Search / Select ingredients bar -->
         <AutoCompleteTextView
             android:id="@+id/ingredientInput"
+            style="@style/CustomAutocompleteStyle"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="Select or search ingredients"
-            android:background="@android:color/white"
-            android:padding="10dp"
-            android:textColor="@android:color/black"
-            android:textSize="15sp"
-            android:layout_marginBottom="10dp" />
+            android:layout_height="55dp"
+            android:hint="Search ingredients..."
+            android:background="@drawable/input_background"
+            android:padding="12dp"
+            android:textColorHint="@color/deep_rose"
+            android:textSize="16sp"
+            android:layout_marginBottom="15dp" />
 
-        <!-- 🔸 Zona unde apar tag-urile selectate -->
         <com.google.android.flexbox.FlexboxLayout
             android:id="@+id/selectedContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="8dp"
             app:flexWrap="wrap"
-            app:justifyContent="flex_start"
-            app:alignItems="flex_start" />
+            app:justifyContent="center"
+            app:alignItems="center" />
     </LinearLayout>
 
-    <!-- 🔹 Butonul jos -->
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/findRecipeButton"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:text="Find Recipe"
+        android:layout_height="60dp"
+        android:text="Find Recipes"
+        android:textAllCaps="false"
+        android:textSize="18sp"
         android:textColor="@android:color/white"
         android:textStyle="bold"
-        android:background="@drawable/rounded_button"
-        android:layout_margin="60dp"
-        android:layout_alignParentBottom="true" />
+        android:background="@drawable/button_pink_rounded"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginBottom="50dp"
+        android:layout_alignParentBottom="true"
+        android:stateListAnimator="@null" />
 
 </RelativeLayout>

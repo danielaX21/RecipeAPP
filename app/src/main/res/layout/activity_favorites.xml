@@ -1,53 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F9B4AE"
-    android:orientation="vertical"
-    android:padding="16dp"
-    tools:context=".FavoritesActivity">
+    android:background="@color/cream_white">
 
-    <!-- 🔹 Header cu titlu și back -->
     <LinearLayout
+        android:id="@+id/headerFav"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginBottom="12dp">
+        android:padding="16dp"
+        android:background="@drawable/header_background"
+        android:elevation="4dp"
+        android:layout_alignParentTop="true">
 
         <ImageView
             android:id="@+id/backButton"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@android:drawable/ic_media_previous"
-            android:contentDescription="Back"
-            app:tint="@android:color/black" />
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_home"
+            app:tint="@color/deep_rose" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Favorites"
-            android:textColor="@android:color/black"
+            android:textSize="22sp"
+            android:fontFamily="serif"
             android:textStyle="bold"
-            android:textSize="18sp"
-            android:gravity="center" />
+            android:gravity="center"
+            android:textColor="@color/deep_rose" />
 
         <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:src="@android:drawable/btn_star_big_on"
-            android:contentDescription="Favorites icon"
-            app:tint="@android:color/black" />
+            app:tint="@color/deep_rose" />
     </LinearLayout>
 
-    <!-- 🔹 RecyclerView cu lista de rețete favorite -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favoritesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical" />
+        android:layout_below="@id/headerFav"
+        android:padding="12dp"
+        android:clipToPadding="false" />
 
-</LinearLayout>
+</RelativeLayout>

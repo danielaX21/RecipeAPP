@@ -6,7 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
+import android.content.Intent
 class FavoritesActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
@@ -19,16 +19,16 @@ class FavoritesActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.favoritesRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
+        // În onCreate, după setarea RecyclerView:
         val backButton = findViewById<ImageView>(R.id.backButton)
-        backButton.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
-
-        // 🔹 Obținem rețetele favorite din managerul global
-        val favorites = RecipeFavoritesManager.getFavorites()
-
-        if (favorites.isEmpty()) {
-            Toast.makeText(this, "No favorites added yet!", Toast.LENGTH_SHORT).show()
+        backButton.setOnClickListener {
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            finish()
         }
-
+// 3. Obținem datele corect
+        val favorites = RecipeFavoritesManager.getFavorites() //
         // ✅ apelăm adapterul corect (cu un singur parametru)
         adapter = RecipeAdapter(favorites)
         recyclerView.adapter = adapter
