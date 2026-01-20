@@ -35,6 +35,6 @@
         <activity android:name=".RecipeDetailsActivity" android:exported="false" />
         <activity android:name=".FavoritesActivity" android:exported="false" />
         <activity android:name=".ProfileActivity" android:exported="false" />
-
+        <activity android:name=".ShoppingListActivity" android:exported="false" />
     </application>
 </manifest>

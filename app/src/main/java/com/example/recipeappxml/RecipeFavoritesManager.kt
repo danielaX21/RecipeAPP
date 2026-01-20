@@ -7,35 +7,36 @@ import com.google.gson.reflect.TypeToken
 object RecipeFavoritesManager {
     private val favorites = mutableListOf<Recipe>()
     private const val PREFS_NAME = "recipe_prefs"
-    private const val FAV_KEY = "favorites_list"
 
-    fun addFavorite(context: Context, recipe: Recipe) {
+    // Adăugăm userName pentru a salva în "cheia" corectă
+    fun addFavorite(context: Context, recipe: Recipe, userName: String) {
         if (!favorites.any { it.title == recipe.title }) {
             favorites.add(recipe)
-            saveToDisk(context)
+            saveToDisk(context, userName)
         }
     }
 
-    fun removeFavorite(context: Context, recipe: Recipe) {
+    fun removeFavorite(context: Context, recipe: Recipe, userName: String) {
         favorites.removeAll { it.title == recipe.title }
-        saveToDisk(context)
+        saveToDisk(context, userName)
     }
 
-    fun loadFromDisk(context: Context) {
+    fun loadFromDisk(context: Context, userName: String) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val json = prefs.getString(FAV_KEY, null)
+        // Cheia devine unică per utilizator: favorites_list_Iulia
+        val json = prefs.getString("favorites_list_$userName", null)
+        favorites.clear()
         if (json != null) {
-            val type = object : TypeToken<MutableList<Recipe>>() {}.type
-            val loaded: MutableList<Recipe> = Gson().fromJson(json, type)
-            favorites.clear()
+            val type = object : com.google.gson.reflect.TypeToken<MutableList<Recipe>>() {}.type
+            val loaded: MutableList<Recipe> = com.google.gson.Gson().fromJson(json, type)
             favorites.addAll(loaded)
         }
     }
 
-    private fun saveToDisk(context: Context) {
+    private fun saveToDisk(context: Context, userName: String) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val json = Gson().toJson(favorites)
-        prefs.edit().putString(FAV_KEY, json).apply()
+        val json = com.google.gson.Gson().toJson(favorites)
+        prefs.edit().putString("favorites_list_$userName", json).apply()
     }
 
     fun getFavorites(): List<Recipe> = favorites

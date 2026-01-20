@@ -42,6 +42,7 @@
                 android:background="@drawable/input_background"
                 android:src="@android:drawable/btn_star_big_on"
                 app:tint="@color/deep_rose" />
+
         </RelativeLayout>
 
         <androidx.cardview.widget.CardView
@@ -111,7 +112,7 @@
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/addToFavoritesButton"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="55dp"
                     android:text="Add to Favorites"
                     android:textAllCaps="false"
                     android:textSize="18sp"
@@ -120,6 +121,18 @@
                     android:background="@drawable/button_pink_rounded"
                     app:backgroundTint="@color/deep_rose" />
 
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnAddToShoppingList"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Add something to Shopping List"
+                    android:textSize="18sp"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:background="@drawable/button_pink_rounded"
+                    app:backgroundTint="@color/soft_pink" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </LinearLayout>

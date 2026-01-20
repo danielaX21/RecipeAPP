@@ -17,11 +17,7 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        // Încarcă favoritele salvate anterior
-        RecipeFavoritesManager.loadFromDisk(this)
-
         // 1. Inițializare View-uri din Header
-        // IMPORTANT: Folosim profileIcon pentru că așa l-am numit în XML-ul de profil
         val profileIcon = findViewById<ImageView>(R.id.profileIcon)
         val favButton = findViewById<ImageView>(R.id.favButton)
         val welcomeText = findViewById<TextView>(R.id.welcomeText)
@@ -33,22 +29,29 @@ class HomeActivity : AppCompatActivity() {
 
         // 3. Logică Nume Utilizator (Preluat de la Login)
         val sharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val userName = sharedPref.getString("userName", "Chef")
+        val userName = sharedPref.getString("userName", "Chef") ?: "Chef"
         welcomeText.text = "Hello, $userName! What's in your kitchen?"
 
-        // 4. Navigare către PROFIL
+        // 4. Încărcare favorite SPECIFICE utilizatorului logat
+        // Mutăm apelul aici, după ce am obținut userName-ul corect
+        RecipeFavoritesManager.loadFromDisk(this, userName)
+
+        // 5. Navigare către PROFIL
         profileIcon.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }
 
-        // 5. Navigare către FAVORITE
+        // 6. Navigare către FAVORITE
         favButton.setOnClickListener {
             val intent = Intent(this, FavoritesActivity::class.java)
             startActivity(intent)
         }
-
-        // --- Restul logicii tale pentru ingrediente rămâne neschimbată ---
+        val shoppingCartIcon = findViewById<ImageView>(R.id.shoppingCartIcon)
+        shoppingCartIcon.setOnClickListener {
+            startActivity(Intent(this, ShoppingListActivity::class.java))
+        }
+        // --- Logica pentru ingrediente ---
 
         val ingredients = listOf(
             "Almonds", "Anchovies", "Anise", "Apple", "Apricot", "Artichoke", "Arugula", "Asparagus", "Avocado", "Bacon",

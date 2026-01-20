@@ -48,6 +48,14 @@
             android:src="@android:drawable/btn_star_big_on"
             android:contentDescription="Favorites icon"
             app:tint="@color/deep_rose" />
+        <ImageView
+            android:id="@+id/shoppingCartIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
+            android:src="@android:drawable/ic_menu_agenda"
+            app:tint="@color/deep_rose"
+            android:contentDescription="Shopping list icon" />
     </LinearLayout>
 
     <LinearLayout

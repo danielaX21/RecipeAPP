@@ -1,11 +1,13 @@
 package com.example.recipeappxml
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog // Import adăugat pentru selecție
 import androidx.appcompat.app.AppCompatActivity
 import com.squareup.picasso.Picasso
 import android.content.res.ColorStateList
@@ -25,43 +27,32 @@ class RecipeDetailsActivity : AppCompatActivity() {
         val favButton: ImageView = findViewById(R.id.favButton)
         val addButton: Button = findViewById(R.id.addToFavoritesButton)
 
-        // Preluăm datele din Intent
+        // Butonul pentru Shopping List
+        val btnShopping: Button = findViewById(R.id.btnAddToShoppingList)
+
+        // Preluăm datele utilizatorului și ale rețetei
+        val sharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val userName = sharedPref.getString("userName", "Chef") ?: "Chef"
+
         val title = intent.getStringExtra("title") ?: "No title"
         val ingredients = intent.getStringExtra("ingredients") ?: "No ingredients"
         val directions = intent.getStringExtra("directions") ?: "No directions"
         val imageUrl = intent.getStringExtra("imageUrl") ?: ""
-
-        // IMPORTANT: Preluăm rating și timp din intent pentru a nu fi 0.0/NA
         val rating = intent.getDoubleExtra("rating", 0.0)
         val totalTime = intent.getStringExtra("total_time") ?: "N/A"
 
-        // Setăm valorile în UI
+        // Setăm valorile în interfață
         titleView.text = title
         ingredientsView.text = ingredients
         directionsView.text = directions
 
         if (imageUrl.isNotEmpty()) {
-            Picasso.get()
-                .load(imageUrl)
-                .placeholder(android.R.drawable.ic_menu_gallery)
-                .into(imageView)
+            Picasso.get().load(imageUrl).placeholder(android.R.drawable.ic_menu_gallery).into(imageView)
         }
 
-        // Navigare înapoi la Home
-        backButton.setOnClickListener {
-            val intentHome = Intent(this, HomeActivity::class.java)
-            intentHome.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-            startActivity(intentHome)
-            finish()
-        }
+        backButton.setOnClickListener { finish() }
+        favButton.setOnClickListener { startActivity(Intent(this, FavoritesActivity::class.java)) }
 
-        // Navigare la pagina de Favorite
-        favButton.setOnClickListener {
-            val intentFav = Intent(this, FavoritesActivity::class.java)
-            startActivity(intentFav)
-        }
-
-        // Creăm obiectul rețetă COMPLET (cu rating și timp)
         val currentRecipe = Recipe(
             title = title,
             ingredients = ingredients,
@@ -71,33 +62,34 @@ class RecipeDetailsActivity : AppCompatActivity() {
             directions = directions
         )
 
-        // Verificăm dacă este deja la favorite
+        // --- Logica Favorite (per utilizator) ---
         var isFavorite = RecipeFavoritesManager.getFavorites().any { it.title == title }
 
-        // Setăm aspectul inițial al butonului
-        if (isFavorite) {
-            addButton.text = "Remove from Favorites"
-            addButton.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.soft_pink))
-        } else {
-            addButton.text = "Add to Favorites"
-            addButton.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.deep_rose))
-        }
-
-        // Logica de Add/Remove (o singură dată!)
-        addButton.setOnClickListener {
-            if (RecipeFavoritesManager.getFavorites().any { it.title == title }) {
-                // Dacă există deja, îl ștergem
-                RecipeFavoritesManager.removeFavorite(this, currentRecipe)
-                Toast.makeText(this, "Removed from Favorites", Toast.LENGTH_SHORT).show()
-                addButton.text = "Add to Favorites"
-                addButton.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.deep_rose))
-            } else {
-                // Dacă nu există, îl adăugăm
-                RecipeFavoritesManager.addFavorite(this, currentRecipe)
-                Toast.makeText(this, "Added to Favorites", Toast.LENGTH_SHORT).show()
+        fun updateButtonUI(favorite: Boolean) {
+            if (favorite) {
                 addButton.text = "Remove from Favorites"
                 addButton.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.soft_pink))
+            } else {
+                addButton.text = "Add to Favorites"
+                addButton.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.deep_rose))
             }
+        }
+        updateButtonUI(isFavorite)
+
+        addButton.setOnClickListener {
+            if (RecipeFavoritesManager.getFavorites().any { it.title == title }) {
+                RecipeFavoritesManager.removeFavorite(this, currentRecipe, userName)
+                updateButtonUI(false)
+            } else {
+                RecipeFavoritesManager.addFavorite(this, currentRecipe, userName)
+                updateButtonUI(true)
+            }
+        }
+
+        // --- Logica Shopping List (cu selecție multiplă) ---
+        btnShopping.setOnClickListener {
+            val intent = Intent(this, ShoppingListActivity::class.java)
+            startActivity(intent)
         }
     }
 }
