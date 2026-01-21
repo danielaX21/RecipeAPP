@@ -81,7 +81,6 @@ class ShoppingListActivity : AppCompatActivity() {
         items.clear()
         items.addAll(ShoppingListManager.getItems())
 
-        // Schimbăm android.R.layout.simple_list_item_1 cu R.layout.item_shopping
         adapter = ArrayAdapter(this, R.layout.item_shopping, items)
         listView.adapter = adapter
     }

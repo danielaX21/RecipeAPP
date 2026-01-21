@@ -26,8 +26,6 @@ class RecipeDetailsActivity : AppCompatActivity() {
         val backButton: ImageView = findViewById(R.id.backButton)
         val favButton: ImageView = findViewById(R.id.favButton)
         val addButton: Button = findViewById(R.id.addToFavoritesButton)
-
-        // Butonul pentru Shopping List
         val btnShopping: Button = findViewById(R.id.btnAddToShoppingList)
 
         // Preluăm datele utilizatorului și ale rețetei
@@ -50,8 +48,15 @@ class RecipeDetailsActivity : AppCompatActivity() {
             Picasso.get().load(imageUrl).placeholder(android.R.drawable.ic_menu_gallery).into(imageView)
         }
 
-        backButton.setOnClickListener { finish() }
+
+        backButton.setOnClickListener {
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+        }
+
         favButton.setOnClickListener { startActivity(Intent(this, FavoritesActivity::class.java)) }
+
 
         val currentRecipe = Recipe(
             title = title,

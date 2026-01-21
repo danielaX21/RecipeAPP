@@ -27,9 +27,8 @@ class FavoritesActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-// 3. Obținem datele corect
+
         val favorites = RecipeFavoritesManager.getFavorites() //
-        // ✅ apelăm adapterul corect (cu un singur parametru)
         adapter = RecipeAdapter(favorites)
         recyclerView.adapter = adapter
     }

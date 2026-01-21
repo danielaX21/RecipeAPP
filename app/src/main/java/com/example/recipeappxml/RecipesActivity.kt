@@ -40,7 +40,7 @@ class RecipesActivity : AppCompatActivity(), SensorEventListener {
             finish()
         }
 
-        // 2. Butonul Favorites (iconița steluță din dreapta sus)
+        // 2. Butonul Favorites (iconița din dreapta sus)
         val favIcon = findViewById<ImageView>(R.id.favIconHeader)
         favIcon.setOnClickListener {
             val intent = Intent(this, FavoritesActivity::class.java)
@@ -144,7 +144,6 @@ class RecipesActivity : AppCompatActivity(), SensorEventListener {
         })
     }
 
-    // În interiorul RecipesActivity.kt
 
     override fun onSensorChanged(event: SensorEvent) {
         val x = event.values[0]; val y = event.values[1]; val z = event.values[2]
